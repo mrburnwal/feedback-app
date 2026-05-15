@@ -10,7 +10,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(express.static('public'));
-app.use('/feedback', express.static('feedback'));
+app.use('/feedback', express.static('feedback', { extensions: ['txt'] }));
 
 app.get('/', (req, res) => {
   const filePath = path.join(__dirname, 'pages', 'feedback.html');
@@ -36,14 +36,8 @@ app.post('/create', async (req, res) => {
     if (exists) {
       res.redirect('/exists');
     } else {
-      // await fs.rename(tempFilePath, finalFilePath);
-      // Replace line 39:
-      // await fs.rename(tempFilePath, finalFilePath);
-
-      // With this:
       await fs.copyFile(tempFilePath, finalFilePath);
       await fs.unlink(tempFilePath);
-
       res.redirect('/');
     }
   });
